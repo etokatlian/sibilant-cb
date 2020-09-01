@@ -1,0 +1,20 @@
+(var example-tasks 
+  [{task "make a sandwich", depends ["buy groceries"]}
+   {task "buy groceries", depends ["go to the store"]}
+   {task "go to the store", depends []}])
+   
+(var example-tasks-two 
+  [{task "make a sandwich", depends ["buy groceries", "go to the store"]}
+   {task "buy groceries", depends ["go to the store"]}
+   {task "go to the store", depends []}])
+
+(var test-one determine-order(example-tasks ["make a sandwich"]))
+(var test-two determine-order(example-tasks ["buy groceries", "make a sandwich"]))
+(var test-three determine-order(example-tasks ["make a sandwich", "buy groceries"]))
+(var test-four determine-order(example-tasks-two ["make a sandwich", "buy groceries"]))
+
+
+console.log(test-one)
+console.log(test-two)
+console.log(test-three)
+console.log(test-four)

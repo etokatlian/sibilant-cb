@@ -1,0 +1,41 @@
+;; Entry
+(def determine-order (tasks chosen-tasks)
+    
+    ;; Initialize our BFS queue and list output
+    (var top (get chosen-tasks 0))
+    (var q [top] list [top])
+    
+    (while (> (length q) 0)
+      (var top q.shift())
+      
+      ;; Find corresponding task at top of queue
+      (var task find-task(tasks top))
+      
+      ;; If the task has dependencies, push them to our list. In this case we create a new list instead of mutating original
+      (assign list create-list(list task.depends))
+      
+      ;; Find our next task and add it to the queue. Again, we create a new queue instead of mutating original
+      (var nextTask find-task(tasks (get task.depends 0)))
+      (assign q create-q(nextTask  q))
+    )
+    
+    ;; Create a slice of all chosen tasks, excluding top. Spread this slice into our answer to make sure that changing the order of chosen-tasks does not alter output.
+    (var rest chosen-tasks.slice(1))
+    
+    ;; Cast to Set to easily remove duplicates
+    (var answer (new Set[...list.reverse() ...rest]))
+    Array.from(answer)
+  )
+
+
+(def create-list (list dependencies)
+   (if (> (length dependencies) 0) (append list (get dependencies 0)) list)
+)
+
+(def create-q (next-task q)
+  (if next-task (append q (get next-task 'task)) q) 
+)
+
+(def find-task (tasks, target)
+  (tasks.find (#(task) (= (get task 'task) target)))
+)
